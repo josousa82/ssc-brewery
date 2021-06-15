@@ -19,6 +19,7 @@ import static org.hamcrest.Matchers.*;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
 
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.httpBasic;
 import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -62,6 +63,8 @@ class BeerControllerIT {
 				.build();
 	}
 
+	// @WithMockUser("spring") tells spring the user is authenticated, Mocks an authenticated user
+	// testing security logic
 	@WithMockUser("spring")
 	@Test
 	void findBeers() throws Exception {
@@ -70,4 +73,18 @@ class BeerControllerIT {
 			   .andExpect(view().name("beers/findBeers"))
 			   .andExpect(model().attributeExists("beer"));
 	}
+
+	// authentication with specific user, if user doesn't exists, or is not permitted in the endpoint it fails
+	// testing security logic and authentication logic
+	@Test
+	void findBeersWithHttpBasic() throws Exception {
+		mockMvc.perform(get("/beers/find").with(httpBasic("spring", "guru")))
+			   .andExpect(status().isOk())
+			   .andExpect(view().name("beers/findBeers"))
+			   .andExpect(model().attributeExists("beer"));
+	}
+
+
+
+
 }
