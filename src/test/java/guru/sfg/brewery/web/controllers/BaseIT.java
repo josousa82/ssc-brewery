@@ -20,27 +20,27 @@ import static org.springframework.security.test.web.servlet.setup.SecurityMockMv
  **/
 public abstract class BaseIT {
 	@Autowired
-	WebApplicationContext wac;
+	protected WebApplicationContext wac;
 
-	MockMvc mockMvc;
-
-	@MockBean
-	BeerRepository beerRepository;
+	protected MockMvc mockMvc;
 
 	@MockBean
-	BeerInventoryRepository beerInventoryRepository;
+	protected BeerRepository beerRepository;
 
 	@MockBean
-	BreweryService breweryService;
+	protected BeerInventoryRepository beerInventoryRepository;
 
 	@MockBean
-	CustomerRepository customerRepository;
+	protected BreweryService breweryService;
 
 	@MockBean
-	BeerService beerService;
+	protected CustomerRepository customerRepository;
+
+	@MockBean
+	protected BeerService beerService;
 
 	@BeforeEach
-	void setUp(){
+	protected void setUp(){
 		mockMvc = MockMvcBuilders
 				.webAppContextSetup(wac)
 				.apply(springSecurity())

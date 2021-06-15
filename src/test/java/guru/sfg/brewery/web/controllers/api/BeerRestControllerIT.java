@@ -1,8 +1,8 @@
-package guru.sfg.brewery.web.controllers;
+package guru.sfg.brewery.web.controllers.api;
 
+import guru.sfg.brewery.web.controllers.BaseIT;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.security.test.context.support.WithMockUser;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -11,7 +11,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  * in package - guru.sfg.brewery.web.controllers
  **/
 @WebMvcTest
-class BeerRestControllerIT extends BaseIT{
+class BeerRestControllerIT extends BaseIT {
 
 
 

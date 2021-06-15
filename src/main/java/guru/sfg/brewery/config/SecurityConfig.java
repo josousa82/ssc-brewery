@@ -1,5 +1,6 @@
 package guru.sfg.brewery.config;
 
+import guru.sfg.brewery.security.CustomPasswordEncoderFactories;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -10,6 +11,12 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.factory.PasswordEncoderFactories;
+import org.springframework.security.crypto.password.LdapShaPasswordEncoder;
+import org.springframework.security.crypto.password.NoOpPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.crypto.password.StandardPasswordEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.stereotype.Controller;
 
@@ -20,7 +27,6 @@ import org.springframework.stereotype.Controller;
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
-
 
 	@Override
 	protected void configure (HttpSecurity http) throws Exception {
@@ -39,22 +45,29 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         .httpBasic();
 	}
 
+	@Bean
+	PasswordEncoder passwordEncoder(){
+		return CustomPasswordEncoderFactories.createDelegatingPasswordEncoder();
+	}
+
 	//Fluent API for the method below
 	@Override
 	protected void configure (AuthenticationManagerBuilder auth) throws Exception {
 		auth.inMemoryAuthentication()
 			.withUser("spring")
-			.password("{noop}guru")
+			.password("{bcrypt}$2a$10$griEHiks8s6qfvqxP/QtvOTldfD79XghlieY/ImXsHNsMEyCLggx2")
 			.roles("ADMIN")
 			.and()
 			.withUser("user")
-			.password("{noop}password")
+			.password("{sha256}6b93431b031fb0ee57e45371077fd3dc7aefa4b4f2999a2e164d94bbcb1300c6342bc993dbc3928d")
 			.roles("USER")
 			.and()
 			.withUser("scott")
-			.password("{noop}tiger")
+			.password("{bcrypt15}$2a$15$hYRPFG9dnCCPbUu61m9eVOYkRpIhrMI6Xc9.5r.MhPe6mYSvDK.ES")
 			.roles("CUSTOMER");
 	}
+
+
 
 
 //	@Override
