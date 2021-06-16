@@ -33,20 +33,22 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
               authorize
 					  .antMatchers("/h2-console/**").permitAll() // do not use in production
 					  .antMatchers("/", "/webjars/**", "/login", "/resources/**").permitAll()
-					  .antMatchers("/beers/find").permitAll()
+					  .antMatchers("/beers/find", "/beers*").permitAll()
 					  .antMatchers(HttpMethod.GET, "/api/v1/beer/**").permitAll()
+					  .mvcMatchers(HttpMethod.DELETE,"/api/v1/beer/**").hasRole("ADMIN")
+					  .mvcMatchers(HttpMethod.GET, "/api/v1/breweries/**").hasRole("CUSTOMER")
 					  .mvcMatchers(HttpMethod.GET, "/api/v1/beerUpc/{upc}").permitAll();
             })
         .authorizeRequests()
-        .anyRequest().authenticated().and()
+        .anyRequest().authenticated()
+		.and()
         .formLogin().and()
-        .httpBasic();
+        .httpBasic()
+		.and().csrf().disable();
 
     	// H2 console config
 		http.headers().frameOptions().sameOrigin();
-
 	}
-
 
 	@Bean
 	PasswordEncoder passwordEncoder(){

@@ -40,9 +40,9 @@ public class UserDataLoader implements CommandLineRunner {
 
 	@Transient
 	private void loadSecurityData(){
-		Authority admin = Authority.builder().role("ADMIN").build();
-		Authority userRole = Authority.builder().role("USER").build();
-		Authority customer = Authority.builder().role("CUSTOMER").build();
+		Authority admin = Authority.builder().role("ROLE_ADMIN").build();
+		Authority userRole = Authority.builder().role("ROLE_USER").build();
+		Authority customer = Authority.builder().role("ROLE_CUSTOMER").build();
 
 		userRepository.save(User.builder()
 						   .username("spring")
