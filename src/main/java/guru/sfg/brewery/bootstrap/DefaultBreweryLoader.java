@@ -51,6 +51,10 @@ public class DefaultBreweryLoader implements CommandLineRunner {
         loadCustomerData();
     }
 
+    private void loadUsersIntoH2(){
+
+    }
+
     private void loadCustomerData() {
         Customer tastingRoom = Customer.builder()
                 .customerName(TASTING_ROOM)

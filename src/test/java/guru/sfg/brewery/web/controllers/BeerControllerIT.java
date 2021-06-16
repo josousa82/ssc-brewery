@@ -3,6 +3,7 @@ package guru.sfg.brewery.web.controllers;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.request.RequestPostProcessor;
 
@@ -18,8 +19,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  * Created by sousaJ on 15/06/2021
  * in package - guru.sfg.brewery.web.controllers
  **/
-
-@WebMvcTest
+// web mvc test annotation will only bring the minimal web layer (controllers and so on) to the context
+//@WebMvcTest
+@SpringBootTest
 class BeerControllerIT extends BaseIT{
 
 	@Test
