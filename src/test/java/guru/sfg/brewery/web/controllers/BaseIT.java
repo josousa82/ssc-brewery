@@ -11,6 +11,8 @@ import org.junit.jupiter.params.provider.Arguments;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.ResultMatcher;
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
@@ -82,7 +84,16 @@ public abstract class BaseIT {
 						);
 	}
 
-	protected void findBeersTestGeneric (String admin, String admin_password, String url, String viewName, String attribute) throws Exception {
+	public static Stream<Arguments> getStreamResultMatchers() {
+		return Stream.of(
+				Arguments.of(status().isOk()),
+				Arguments.of(status().isForbidden()),
+				Arguments.of(status().isForbidden())
+						);
+	}
+
+
+	protected void beersTestGeneric (String admin, String admin_password, String url, String viewName, String attribute) throws Exception {
 		mockMvc.perform(get(url).with(httpBasic(admin, admin_password)))
 			   .andExpect(status().isOk())
 			   .andExpect(view().name(viewName))

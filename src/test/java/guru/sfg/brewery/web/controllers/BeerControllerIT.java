@@ -1,22 +1,19 @@
 package guru.sfg.brewery.web.controllers;
 
 
-import guru.sfg.brewery.Util;
 import guru.sfg.brewery.repositories.BeerOrderRepository;
 import guru.sfg.brewery.repositories.BeerRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.security.test.context.support.WithMockUser;
-import org.springframework.test.web.servlet.request.RequestPostProcessor;
+import org.springframework.test.web.servlet.ResultMatcher;
 
 
-import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.anonymous;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.httpBasic;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -51,7 +48,7 @@ class BeerControllerIT extends BaseIT{
 		@ParameterizedTest(name = "#index with [{arguments}]" )
 		@MethodSource("guru.sfg.brewery.web.controllers.BeerControllerIT#getStreamAllUsers")
 		void testFindBeerByIdWithHttpBasicAUTH(String user, String password) throws Exception {
-			findBeersTestGeneric(user, password,FIND_BEER_BY_ID_URL,VIEW_NAME,MODEL_ATTRIBUTE);
+			beersTestGeneric(user, password, FIND_BEER_BY_ID_URL, VIEW_NAME, MODEL_ATTRIBUTE);
 		}
 
 		@Test
@@ -74,7 +71,7 @@ class BeerControllerIT extends BaseIT{
 		@ParameterizedTest(name = "#index with [{arguments}]" )
 		@MethodSource("guru.sfg.brewery.web.controllers.BeerControllerIT#getStreamAllUsers")
 		void TestFindBeersWithHttpBasicAUTH(String user, String password) throws Exception {
-			findBeersTestGeneric(user, password,FIND_BEERS_URL,VIEW_NAME,MODEL_ATTRIBUTE);
+			beersTestGeneric(user, password, FIND_BEERS_URL, VIEW_NAME, MODEL_ATTRIBUTE);
 		}
 
 		@Test
@@ -85,7 +82,7 @@ class BeerControllerIT extends BaseIT{
 
 	}
 
-	@DisplayName("Create Beer MVC Integration Tests")
+	@DisplayName("Initiate new form")
 	@Nested
 	class IntiCreationForm {
 
@@ -94,14 +91,24 @@ class BeerControllerIT extends BaseIT{
 		private final String MODEL_ATTRIBUTE = "beer";
 
 
+
+		@Test
+		void initCreationFormAuth() throws Exception {
+				mockMvc.perform(get(CREATE_BEER_URL).with(httpBasic(ADMIN, ADMIN_PASSWORD)))
+					   .andExpect(status().isOk())
+					   .andExpect(view().name("beers/createBeer"))
+					   .andExpect(model().attributeExists("beer"));
+		}
+
 		@ParameterizedTest(name = "#index with [{arguments}]" )
-		@MethodSource("guru.sfg.brewery.web.controllers.BeerControllerIT#getStreamAllUsers")
-		void testCreateBeerWithHttpBasicAUTH(String user, String password) throws Exception {
-			findBeersTestGeneric(user, password,CREATE_BEER_URL,VIEW_NAME,MODEL_ATTRIBUTE);
+		@MethodSource({"guru.sfg.brewery.web.controllers.BeerControllerIT#getStreamNotAdmin"})
+		void initCreationFormAuthNotAdmin(String user, String password ) throws Exception {
+			mockMvc.perform(get(CREATE_BEER_URL).with(httpBasic(user, password)))
+				   .andExpect(status().isForbidden());
 		}
 
 		@Test
-		void testCreateBeerWithHttpBasicNoAuth() throws Exception {
+		void initCreationFormNoAuth() throws Exception {
 			mockMvc.perform(get(CREATE_BEER_URL))
 				   .andExpect(status().isUnauthorized());
 		}
