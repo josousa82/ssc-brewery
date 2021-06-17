@@ -1,5 +1,7 @@
 package guru.sfg.brewery.web.controllers;
 
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -15,7 +17,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * Created by sousaJ on 15/06/2021
  * in package - guru.sfg.brewery.web.controllers
  **/
-
+@Disabled
 class PasswordEncodingTests {
 	static final String PASSWORD = "password";
 

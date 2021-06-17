@@ -24,20 +24,29 @@ public abstract class BaseIT {
 
 	protected MockMvc mockMvc;
 
-	@MockBean
-	protected BeerRepository beerRepository;
+//	@MockBean
+//	protected BeerRepository beerRepository;
+//
+//	@MockBean
+//	protected BeerInventoryRepository beerInventoryRepository;
+//
+//	@MockBean
+//	protected BreweryService breweryService;
+//
+//	@MockBean
+//	protected CustomerRepository customerRepository;
+//
+//	@MockBean
+//	protected BeerService beerService;
 
-	@MockBean
-	protected BeerInventoryRepository beerInventoryRepository;
+	protected final String ADMIN = "spring";
+	protected final String ADMIN_PASSWORD = "guru";
 
-	@MockBean
-	protected BreweryService breweryService;
+	protected final String CUSTOMER = "scott";
+	protected final String CUSTOMER_PASSWORD = "tiger";
 
-	@MockBean
-	protected CustomerRepository customerRepository;
-
-	@MockBean
-	protected BeerService beerService;
+	protected final String USER = "user";
+	protected final String USER_PASSWORD = "password";
 
 	@BeforeEach
 	protected void setUp(){
@@ -45,5 +54,7 @@ public abstract class BaseIT {
 				.webAppContextSetup(wac)
 				.apply(springSecurity())
 				.build();
+
 	}
+
 }

@@ -20,19 +20,25 @@ public class BreweryRestControllerIT extends BaseIT {
 	private static final String TEST_URL = "/api/v1/breweries/";
 
 	@Test
-	void listBreweriesWithCustomerRoleAuthenticated() throws Exception {
-		mockMvc.perform(get(TEST_URL).with(httpBasic("scott", "tiger")))
+	void listBreweriesJsonAdmin() throws Exception {
+		mockMvc.perform(get(TEST_URL).with(httpBasic(ADMIN, ADMIN_PASSWORD)))
+			   .andExpect(status().is2xxSuccessful());
+	}
+
+	@Test
+	void listBreweriesJsonCustomer() throws Exception {
+		mockMvc.perform(get(TEST_URL).with(httpBasic(CUSTOMER, CUSTOMER_PASSWORD)))
 			   .andExpect(status().isOk());
 	}
 
 	@Test
-	void listBreweriesWithoutCustomerRoleAndAuthenticated() throws Exception {
-		mockMvc.perform(get(TEST_URL).with(httpBasic("user", "password")))
+	void listBreweriesJsonUser() throws Exception {
+		mockMvc.perform(get(TEST_URL).with(httpBasic(USER, USER_PASSWORD)))
 			   .andExpect(status().isForbidden());
 	}
 
 	@Test
-	void listBreweriesNotAuthenticated() throws Exception {
+	void listBreweriesJsonNOAUTH() throws Exception {
 		mockMvc.perform(get(TEST_URL))
 			   .andExpect(status().isUnauthorized());
 	}

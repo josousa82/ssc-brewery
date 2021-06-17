@@ -61,6 +61,7 @@ public class UserDataLoader implements CommandLineRunner {
 								.password(passwordEncoder.encode("tiger"))
 								.authority(customer)
 								.build());
+
 		log.info("Users Loaded: " + userRepository.count());
 
     userRepository

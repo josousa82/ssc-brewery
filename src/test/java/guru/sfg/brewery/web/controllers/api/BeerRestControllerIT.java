@@ -1,8 +1,20 @@
 package guru.sfg.brewery.web.controllers.api;
 
+import guru.sfg.brewery.domain.Beer;
+import guru.sfg.brewery.repositories.BeerOrderRepository;
+import guru.sfg.brewery.repositories.BeerRepository;
 import guru.sfg.brewery.web.controllers.BaseIT;
+import guru.sfg.brewery.web.model.BeerStyleEnum;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
+
+import java.util.Random;
 
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.httpBasic;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
@@ -15,37 +27,66 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest
 class BeerRestControllerIT extends BaseIT {
 
-	private final String URL_WITH_ID = "/api/v1/beer/97df0c39-90c4-4ae0-b663-453e8e19c311";
+	@Autowired
+	BeerRepository beerRepository;
+
+	@Autowired
+	BeerOrderRepository beerOrderRepository;
 
 
-	@Test
-	void deleteBeerWithHttpBasic() throws Exception {
-		mockMvc.perform(delete(URL_WITH_ID).with(httpBasic("spring", "guru")))
-			   .andExpect(status().is2xxSuccessful());
+	private String URL = "/api/v1/beer/";
+
+	@DisplayName("Delete tests")
+	@Nested
+	class DeleteTests {
+		public Beer beerToDelete () {
+			Random rand = new Random();
+			return beerRepository.saveAndFlush(Beer.builder()
+												   .beerName("Delete Me Beer")
+												   .beerStyle(BeerStyleEnum.IPA)
+												   .minOnHand(12)
+												   .quantityToBrew(200)
+												   .upc(String.valueOf(rand.nextInt(99999999)))
+												   .build());
+		}
+
+
+		@Test
+		void deleteBeerWithHttpBasic() throws Exception {
+			mockMvc.perform(delete(URL + beerToDelete().getId()).with(httpBasic(ADMIN, ADMIN_PASSWORD)))
+				   .andExpect(status().is2xxSuccessful());
+		}
+
+
+		@Test
+			void deleteBeerWithHttpBasicUserRole() throws Exception {
+				mockMvc.perform(delete(URL + beerToDelete().getId()).with(httpBasic(USER, USER_PASSWORD)))
+					   .andExpect(status().isForbidden());
+		}
+
+		@Test
+		void deleteBeerWithHttpBasicCustomerRole() throws Exception {
+			mockMvc.perform(delete(URL + beerToDelete().getId()).with(httpBasic(CUSTOMER, CUSTOMER_PASSWORD)))
+				   .andExpect(status().isForbidden());
+		}
+
+		@Test
+		void deleteBeerWithHttpBasicNoAuth() throws Exception {
+			mockMvc.perform(delete(URL + beerToDelete().getId()))
+				   .andExpect(status().isUnauthorized());
+		}
+
 	}
-
-	@Test
-	void deleteBeerWithHttpBasicUserRole() throws Exception {
-		mockMvc.perform(delete(URL_WITH_ID).with(httpBasic("user", "password")))
-			   .andExpect(status().isForbidden());
-	}
-
-	@Test
-	void deleteBeerWithHttpBasicCustomerRole() throws Exception {
-		mockMvc.perform(delete(URL_WITH_ID).with(httpBasic("scott", "tiger")))
-			   .andExpect(status().isForbidden());
-	}
-
 
 	@Test
 	void findBeersTest() throws Exception {
-		mockMvc.perform(get("/api/v1/beer/"))
+		mockMvc.perform(get(URL))
 			   .andExpect(status().isOk());
 	}
 
 	@Test
 	void findBeerById() throws Exception {
-		mockMvc.perform(get(URL_WITH_ID))
+		mockMvc.perform(get(URL + new DeleteTests().beerToDelete().getId()))
 			   .andExpect(status().isOk());
 	}
 
@@ -55,4 +96,10 @@ class BeerRestControllerIT extends BaseIT {
 			   .andExpect(status().isOk());
 	}
 
+	@Test
+	void findBeerFormAdmin() throws Exception {
+		mockMvc.perform(get("/beers").param("beerName", "")
+									 .with(httpBasic(ADMIN, ADMIN_PASSWORD)))
+			   .andExpect(status().isOk());
+	}
 }
