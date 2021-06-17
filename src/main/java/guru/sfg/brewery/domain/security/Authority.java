@@ -10,7 +10,6 @@ import java.util.Set;
  * Created by sousaJ on 16/06/2021
  * in package - guru.sfg.brewery.domain.security
  **/
-@Accessors(chain = true , fluent = true)
 @Getter
 @Setter
 @AllArgsConstructor
@@ -22,8 +21,9 @@ public class Authority {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
-	private String role;
+
+	private String permission;
 
 	@ManyToMany(mappedBy = "authorities")
-	private Set<User> users;
+	private Set<Role> roles;
 }
