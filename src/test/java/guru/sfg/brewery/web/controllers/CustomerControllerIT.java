@@ -61,6 +61,7 @@ class CustomerControllerIT extends BaseIT {
 				   .andExpect(status().isForbidden());
 		}
 
+		@Rollback
 		@ParameterizedTest(name = "#index with [{arguments}]" )
 		@MethodSource("guru.sfg.brewery.web.controllers.BeerControllerIT#getStreamAdminCustomer")
 		void testListCustomersAuth(String user, String password) throws Exception {

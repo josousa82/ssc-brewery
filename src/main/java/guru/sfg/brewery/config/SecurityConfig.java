@@ -24,7 +24,7 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
  **/
 @Configuration
 @EnableWebSecurity
-@EnableGlobalMethodSecurity(securedEnabled = true, prePostEnabled = true)
+@EnableGlobalMethodSecurity(prePostEnabled = true)
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
 	@Override
@@ -34,22 +34,22 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             authorize -> {
               authorize
 					  // Resources matchers
-					  .antMatchers("/h2-console/**").permitAll() // do not use in production
-					  .antMatchers( "/", "/webjars/**", "/login", "/resources/**").permitAll()
+					  .antMatchers("/","/h2-console/**").permitAll() // do not use in production
+					  .antMatchers(  "/webjars/**", "/login", "/resources/**").permitAll();
 
 					  // Brewery API Controller matchers
-					  .antMatchers(HttpMethod.GET, "/api/v1/breweries/").hasAnyRole("ADMIN", "CUSTOMER")
+//					  .antMatchers(HttpMethod.GET, "/api/v1/breweries/").hasAnyRole("ADMIN", "CUSTOMER")
 
 					  // Brewery Views Controller matchers
-					  .mvcMatchers( "/brewery/breweries").hasAnyRole("ADMIN", "CUSTOMER") // view no need to specify method
+//					  .mvcMatchers( "/brewery/breweries").hasAnyRole("ADMIN", "CUSTOMER") // view no need to specify method
 
 					  // Beer API Controller matchers
-					  .antMatchers(HttpMethod.GET, "/api/v1/beer/**").hasAnyRole("ADMIN", "CUSTOMER", "USER")
-					  .antMatchers(HttpMethod.GET, "/api/v1/beerUpc/{upc}").hasAnyRole("ADMIN", "CUSTOMER", "USER")
-					  .antMatchers(HttpMethod.DELETE, "/api/v1/beer/**").hasAnyRole("ADMIN")
+//					  .antMatchers(HttpMethod.GET, "/api/v1/beer/**").hasAnyRole("ADMIN", "CUSTOMER", "USER")
+//					  .antMatchers(HttpMethod.GET, "/api/v1/beerUpc/{upc}").hasAnyRole("ADMIN", "CUSTOMER", "USER")
+//					  .antMatchers(HttpMethod.DELETE, "/api/v1/beer/**").hasAnyRole("ADMIN");
 
               		  // Beer Views Controller matchers
-					  .mvcMatchers("/beers/find", "/beers/{beerId}").hasAnyRole("ADMIN", "CUSTOMER", "USER");
+//					  .mvcMatchers("/beers/find", "/beers/{beerId}").hasAnyRole("ADMIN", "CUSTOMER", "USER");
 
 
             })

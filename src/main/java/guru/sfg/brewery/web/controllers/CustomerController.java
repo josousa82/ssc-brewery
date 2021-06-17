@@ -43,7 +43,7 @@ public class CustomerController {
     //ToDO: Add service
     private final CustomerRepository customerRepository;
 
-    @Secured({"ROLE_CUSTOMER"})
+    @PreAuthorize("hasRole('ROLE_CUSTOMER')")
     @RequestMapping("/find")
     public String findCustomers(Model model){
         model.addAttribute("customer", Customer.builder().build());

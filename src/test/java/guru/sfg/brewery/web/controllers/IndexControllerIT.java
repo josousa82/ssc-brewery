@@ -16,7 +16,7 @@ public class IndexControllerIT extends BaseIT {
 
 	@Test
 	void testGetIndexSlash() throws Exception {
-		mockMvc.perform(get("/"))
+		mockMvc.perform(get("/", ""))
 			   .andExpect(status().isOk());
 	}
 }
