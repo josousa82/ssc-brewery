@@ -7,6 +7,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
@@ -23,6 +24,7 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
  **/
 @Configuration
 @EnableWebSecurity
+@EnableGlobalMethodSecurity(securedEnabled = true, prePostEnabled = true)
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
 	@Override
@@ -33,13 +35,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
               authorize
 					  // Resources matchers
 					  .antMatchers("/h2-console/**").permitAll() // do not use in production
-					  .antMatchers("/", "/webjars/**", "/login", "/resources/**").permitAll()
+					  .antMatchers( "/", "/webjars/**", "/login", "/resources/**").permitAll()
 
 					  // Brewery API Controller matchers
 					  .antMatchers(HttpMethod.GET, "/api/v1/breweries/").hasAnyRole("ADMIN", "CUSTOMER")
 
 					  // Brewery Views Controller matchers
-					  .mvcMatchers( "/brewery/breweries/**").hasAnyRole("ADMIN", "CUSTOMER") // view no need to specify method
+					  .mvcMatchers( "/brewery/breweries").hasAnyRole("ADMIN", "CUSTOMER") // view no need to specify method
 
 					  // Beer API Controller matchers
 					  .antMatchers(HttpMethod.GET, "/api/v1/beer/**").hasAnyRole("ADMIN", "CUSTOMER", "USER")

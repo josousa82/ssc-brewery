@@ -67,11 +67,18 @@ public abstract class BaseIT {
 				);
 	}
 
-	public static Stream<Arguments> resultMatchers() {
+	public static Stream<Arguments> getStreamAdminCustomer() {
 		return Stream.of(
-				Arguments.of(status().is2xxSuccessful()),
-				Arguments.of(status().isForbidden()),
-				Arguments.of(status().isForbidden())
+				Arguments.of(ADMIN, ADMIN_PASSWORD),
+				Arguments.of(CUSTOMER, CUSTOMER_PASSWORD)
+						);
+	}
+
+
+	public static Stream<Arguments> getStreamNotAdmin() {
+		return Stream.of(
+				Arguments.of(CUSTOMER, CUSTOMER_PASSWORD),
+				Arguments.of(USER, USER_PASSWORD)
 						);
 	}
 
